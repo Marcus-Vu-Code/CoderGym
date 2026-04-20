@@ -974,6 +974,42 @@
                 "visualization": "Save corrupted image examples showing FGSM perturbations.",
                 "artifacts": "Save both models, perturbation examples, and robustness report."
             }
+        },
+        {
+            "series": "Natural Language Processing",
+            "level": 2,
+            "id": "nlp_lvl2_bigframe_embeddings",
+            "algorithm": "BigQuery Bigframe Embeddings with Semantic Similarity",
+            "description": "Load text data from BigQuery Bigframe; generate embeddings using Vertex AI Embeddings API; build neural network for semantic similarity prediction.",
+            "interface_protocol": "pytorch_task_v1",
+            "requirements": {
+                "bigquery_integration": "Demonstrate BigQuery Bigframe data loading with SQL queries (LIMIT, WHERE clauses, SELECT); include proper error handling and fallback to local data when BigQuery unavailable.",
+                "math": "Include cosine similarity: sim(e_i, e_j) = (e_i · e_j) / (||e_i|| ||e_j||); contrastive loss with temperature scaling.",
+                "data_source": "Query public dataset (e.g., Google STS benchmark) or fallback to local semantic similarity pairs; load 20+ text pairs with similarity labels (1=similar, 0=dissimilar).",
+                "embeddings": "Use Vertex AI TextEmbedding API (768-dim) when credentials available; provide local simulation for testing (hash-based deterministic embeddings preserving semantic relationships).",
+                "model": "Build MLP classifier: concat(emb1, emb2, emb1*emb2, |emb1-emb2|) -> 512-dim hidden -> binary classification.",
+                "evaluation": "evaluate() must compute accuracy, loss, and per-class metrics on validation split; verify embedding quality through similarity consistency checks.",
+                "main_block": "Load from Bigframe, generate embeddings, build and train model, evaluate on both splits, assert validation_accuracy > 0.60 and training_accuracy > 0.65.",
+                "artifacts": "Save model, embedding cache summary, metrics, and training history."
+            }
+        },
+        {
+            "series": "Natural Language Processing",
+            "level": 3,
+            "id": "nlp_lvl3_bigframe_llm_classification",
+            "algorithm": "BigQuery Bigframe LLM Text Classification",
+            "description": "Load text classification data from BigQuery Bigframe; generate LLM features and augmentations using Vertex AI LLM API; train ensemble-style classifier combining original and augmented representations.",
+            "interface_protocol": "pytorch_task_v1",
+            "requirements": {
+                "bigquery_integration": "Demonstrate BigQuery Bigframe SQL queries with WHERE, GROUP BY, HAVING clauses for text classification data; include connection error handling and fallback mechanism.",
+                "data_loading": "Query public dataset (e.g., DBpedia or text classification benchmark) with proper SQL filters; load 30+ texts with 3 class labels; demonstrate Bigframe to pandas conversion.",
+                "llm_feature_generation": "Use Vertex AI LLM API for semantic feature extraction (keyword extraction, summarization-based features) when credentials available; provide local simulation using text statistics and hashing for testing.",
+                "augmentation": "Implement text augmentation through LLM paraphrasing (50% of data augmented); generate alternative phrasings preserving meaning for improved generalization.",
+                "model": "Build MLP classifier: concat(original_features, augmented_features) -> 256-dim hidden with batch norm -> softmax over 3 classes.",
+                "evaluation": "evaluate() must compute multi-class accuracy, CE loss, and per-class accuracies on validation split; report feature cache statistics.",
+                "main_block": "Load from Bigframe, generate LLM features and augmentations, train classifier on combined features, evaluate both splits, assert validation_accuracy > 0.60 and feature_cache_generated.",
+                "artifacts": "Save model, feature cache summary, augmentation examples, metrics, and training history with per-class performance."
+            }
         }
     ]
 }
