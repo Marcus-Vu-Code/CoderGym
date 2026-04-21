@@ -67,11 +67,14 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 # IMPORTANT: import unsloth before transformers-related internals
+# You can comment out the unsloth import and related code if you only want to run remote model comparisons without any local models, but for local model loading/inference you need unsloth installed.
 import unsloth  # noqa: F401
+from unsloth import FastLanguageModel
+
 import torch
 import httpx
 from openai import OpenAI
-from unsloth import FastLanguageModel
+
 
 
 # -----------------------------------------------------------------------------
@@ -1343,6 +1346,8 @@ if __name__ == "__main__":
     main()
 
 """
+You can get the NVIDIA_API_KEY from https://build.nvidia.com/models
+
 # Example: NVIDIA-only, 30 random unfinished samples, saves correct answers separately
 # Re-running is safe: already-done (sample, model) pairs are skipped automatically.
 export NVIDIA_API_KEY="nvapi-xxxx"
